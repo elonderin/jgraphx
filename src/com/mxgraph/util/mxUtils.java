@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,15 +43,12 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
 import javax.swing.text.html.HTMLDocument;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
 import com.mxgraph.io.mxCodecRegistry;
 import com.mxgraph.model.mxCellPath;
 import com.mxgraph.model.mxICell;
@@ -1674,8 +1672,14 @@ public class mxUtils
 		swingFontStyle += ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC) ? Font.ITALIC
 				: Font.PLAIN;
 
-		Map<TextAttribute, Integer> fontAttributes = (fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE ?
-				Collections.singletonMap(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON) : null;
+    /* PERF: cache these maps | TM @ 05.01.2019 */
+    Map fontAttributes = new HashMap();
+    if ((fontStyle & mxConstants.FONT_UNDERLINE) > 0) {
+      fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+    }
+    if ((fontStyle & mxConstants.FONT_STRIK_THROUGH) > 0) {
+      fontAttributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+    }
 		
 		return new Font(fontFamily, swingFontStyle, (int) (fontSize * scale)).deriveFont(fontAttributes);
 	}

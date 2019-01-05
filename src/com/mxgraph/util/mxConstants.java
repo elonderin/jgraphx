@@ -985,6 +985,10 @@ public class mxConstants
 	 * FONT_UNDERLINE
 	 */
 	public static final int FONT_UNDERLINE = 4;
+	/**
+	 * flag mask or strikthrough 
+	 */
+	public static final int FONT_STRIK_THROUGH= 8;
 
 	/**
 	 * SHAPE_RECTANGLE
